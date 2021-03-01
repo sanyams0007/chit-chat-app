@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 
 const MyMessage = ({ message }) => {
   if (message?.attachments?.length > 0) {
@@ -19,9 +20,13 @@ const MyMessage = ({ message }) => {
         marginRight: "18px",
         color: "white",
         backgroundColor: "#3b2a50",
+        borderBottomRightRadius: "0px",
       }}
     >
       {message.text}
+      <h4>
+        <span>{moment(message.created).format("MMM DD h:mm A")}</span>
+      </h4>
     </div>
   );
 };

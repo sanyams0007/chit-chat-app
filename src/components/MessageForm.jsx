@@ -1,14 +1,28 @@
 import React, { useState } from "react";
 import { sendMessage, isTyping } from "react-chat-engine";
 import { SendOutlined, PictureOutlined } from "@ant-design/icons";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
 
 const MessageForm = (props) => {
+  const [emojiPickerState, SetEmojiPicker] = useState(false);
   const [value, setValue] = useState("");
   const { chatId, creds } = props;
 
+  let emojiPicker;
+  if (emojiPickerState) {
+    emojiPicker = (
+      <Picker
+        className="emoji-picker"
+        title="Pick your emoji…"
+        emoji="point_up"
+        onSelect={(emoji) => setValue(value + emoji.native)}
+      />
+    );
+  }
+
   const handleChange = (e) => {
     setValue(e.target.value);
-    console.log(props);
     isTyping(props, chatId);
   };
 
@@ -17,38 +31,53 @@ const MessageForm = (props) => {
     const text = value.trim();
     if (text.length > 0) sendMessage(creds, chatId, { text });
     setValue("");
+    SetEmojiPicker(!emojiPickerState);
   };
 
   const handleUpload = (e) => {
     sendMessage(creds, chatId, { files: e.target.files, text: "" });
   };
 
+  function triggerPicker(e) {
+    e.preventDefault();
+    SetEmojiPicker(!emojiPickerState);
+  }
+
   return (
-    <form className="message-form" onSubmit={handleSubmit}>
-      <input
-        className="message-input"
-        placeholder="Send a message..."
-        value={value}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-        type="text"
-      />
-      <label htmlFor="upload-button">
-        <span className="image-button">
-          <PictureOutlined className="picture-icon" />
-        </span>
-      </label>
-      <input
-        type="file"
-        multiple={false}
-        id="upload-button"
-        style={{ display: "none" }}
-        onChange={handleUpload}
-      />
-      <button type="submit" className="send-button">
-        <SendOutlined className="send-icon" />
-      </button>
-    </form>
+    <>
+      {emojiPicker}
+      <form className="message-form" onSubmit={handleSubmit}>
+        <input
+          className="message-input"
+          placeholder="Send a message..."
+          value={value}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          type="text"
+        />
+        <button className="send-button" onClick={triggerPicker}>
+          <span role="img" aria-label="">
+            😁
+          </span>
+        </button>
+        <label htmlFor="upload-button">
+          <span className="image-button">
+            <PictureOutlined className="picture-icon" />
+          </span>
+        </label>
+
+        <input
+          type="file"
+          multiple={false}
+          id="upload-button"
+          style={{ display: "none" }}
+          onChange={handleUpload}
+        />
+        <button type="submit" className="send-button">
+          <SendOutlined className="send-icon" />
+        </button>
+      </form>
+    </>
   );
 };
 

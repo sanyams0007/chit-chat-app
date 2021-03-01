@@ -4,11 +4,9 @@ import MyMessage from "./MyMessage";
 import TheirMessage from "./TheirMessage";
 
 const ChatFeed = (props) => {
-  console.log(props);
+  //console.log(props);
   const { chats, activeChat, userName, messages } = props;
-
   const chat = chats && chats[activeChat];
-
   const renderReadReceipts = (message, isMyMessage) => {
     return chat.people.map(
       (person, index) =>
@@ -21,6 +19,22 @@ const ChatFeed = (props) => {
               backgroundImage: `url(${person?.person?.avatar})`,
             }}
           />
+        )
+    );
+  };
+
+  const renderUserImg = () => {
+    return chat.people.map(
+      (person, index) =>
+        person?.person?.username === userName && (
+          <>
+            <img
+              key={`img_${index}`}
+              src={person?.person?.avatar}
+              alt="user"
+              className="message-avatar"
+            />
+          </>
         )
     );
   };
@@ -65,19 +79,32 @@ const ChatFeed = (props) => {
     localStorage.removeItem("password");
     window.location.reload();
   };
+
+  /* const admin = chat?.people.filter((person) => person?.username === userName);
+  console.log(admin); */
   return (
     <div className="chat-feed">
       <div className="chat-title-container">
-        <div className="chat-title">{chat?.title}</div>
-        <div className="chat-subtitle">
-          {chat.people.map((person) => ` ${person.person.username}`)}
+        <div className="left_header">
+          <div className="chat-title">{chat?.title}</div>
+          <div className="chat-subtitle">
+            {chat.people.map((person) => ` ${person.person.username}`)}
+          </div>
         </div>
-        <button onClick={signOut} className="logout-btn">
-          Sign Out
-        </button>
+        <div className="right_header">
+          {renderUserImg()}
+          <div className="user_info">
+            {chat?.admin?.username === userName ? (
+              <h6 className="admin-tag">Admin</h6>
+            ) : null}
+            <button onClick={signOut}>Sign Out</button>
+          </div>
+        </div>
       </div>
       {renderMessages()}
+
       <div style={{ height: "100px" }} />
+
       <div className="message-form-container">
         <MessageForm {...props} chatId={activeChat} />
       </div>

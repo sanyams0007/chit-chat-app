@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 
 const TheirMessage = ({ lastMessage, message }) => {
   const isFirstMessageByUser =
@@ -25,9 +26,15 @@ const TheirMessage = ({ lastMessage, message }) => {
             float: "left",
             backgroundColor: "#cabcdc",
             marginLeft: isFirstMessageByUser ? "4px" : "48px",
+            borderBottomLeftRadius: "0px",
           }}
         >
           {message.text}
+          <h4>
+            <span style={{ justifySelf: "flex-start" }}>
+              {moment(message.created).format("MMM DD h:mm A")}
+            </span>
+          </h4>
         </div>
       )}
     </div>
