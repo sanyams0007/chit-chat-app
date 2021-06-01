@@ -4,38 +4,44 @@ import MyMessage from "./MyMessage";
 import TheirMessage from "./TheirMessage";
 
 const ChatFeed = (props) => {
-  //console.log(props);
+  console.log(props);
   const { chats, activeChat, userName, messages } = props;
   const chat = chats && chats[activeChat];
   const renderReadReceipts = (message, isMyMessage) => {
-    return chat.people.map(
-      (person, index) =>
-        person.last_read === message.id && (
-          <div
-            key={`read_${index}`}
-            className="read-receipt"
-            style={{
-              float: isMyMessage ? "right" : "left",
-              backgroundImage: `url(${person?.person?.avatar})`,
-            }}
-          />
-        )
+    return (
+      chat &&
+      chat.people.map(
+        (person, index) =>
+          person.last_read === message.id && (
+            <div
+              key={`read_${index}`}
+              className="read-receipt"
+              style={{
+                float: isMyMessage ? "right" : "left",
+                backgroundImage: `url(${person?.person?.avatar})`,
+              }}
+            />
+          )
+      )
     );
   };
 
   const renderUserImg = () => {
-    return chat.people.map(
-      (person, index) =>
-        person?.person?.username === userName && (
-          <>
-            <img
-              key={`img_${index}`}
-              src={person?.person?.avatar}
-              alt="user"
-              className="message-avatar"
-            />
-          </>
-        )
+    return (
+      chat &&
+      chat.people.map(
+        (person, index) =>
+          person?.person?.username === userName && (
+            <>
+              <img
+                key={`img_${index}`}
+                src={person?.person?.avatar}
+                alt="user"
+                className="message-avatar"
+              />
+            </>
+          )
+      )
     );
   };
 
@@ -72,13 +78,7 @@ const ChatFeed = (props) => {
     });
   };
 
-  if (!chat) return "Loading....";
-
-  const signOut = () => {
-    localStorage.removeItem("username");
-    localStorage.removeItem("password");
-    window.location.reload();
-  };
+  /* if (!chat) return "Loading...."; */
 
   /* const admin = chat?.people.filter((person) => person?.username === userName);
   console.log(admin); */
@@ -88,20 +88,25 @@ const ChatFeed = (props) => {
         <div className="left_header">
           <div className="chat-title">{chat?.title}</div>
           <div className="chat-subtitle">
-            {chat.people.map((person) => ` ${person.person.username}`)}
+            {chat &&
+              chat.people.map((person, index) => (
+                <span key={person.person.username}>
+                  {person.person.first_name} {person.person.last_name}
+                  {index !== chat.people.length && ", "}
+                </span>
+              ))}
           </div>
         </div>
         <div className="right_header">
           {renderUserImg()}
-          <div className="user_info">
-            {chat?.admin?.username === userName ? (
+          {chat?.admin?.username === userName && (
+            <div className="user_info">
               <h6 className="admin-tag">Admin</h6>
-            ) : null}
-            <button onClick={signOut}>Sign Out</button>
-          </div>
+            </div>
+          )}
         </div>
       </div>
-      {renderMessages()}
+      <div className="messages-box">{renderMessages()}</div>
 
       <div style={{ height: "100px" }} />
 

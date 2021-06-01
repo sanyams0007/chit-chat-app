@@ -31,7 +31,7 @@ const MessageForm = (props) => {
     const text = value.trim();
     if (text.length > 0) sendMessage(creds, chatId, { text });
     setValue("");
-    SetEmojiPicker(!emojiPickerState);
+    SetEmojiPicker(emojiPickerState && !emojiPickerState);
   };
 
   const handleUpload = (e) => {
