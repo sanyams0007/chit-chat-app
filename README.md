@@ -1,6 +1,6 @@
 # Chit-Chat App
 
-### [Live Site](https://edayreminders.netlify.app)
+### [Live Site](https://chit-chat2.netlify.app/)
 
 ## Screens
 
